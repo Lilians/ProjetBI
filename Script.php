@@ -17,3 +17,5 @@ $a = new Api\ApiRequester();
 
 
 var_dump($a->requeteTousContrats());
+var_dump($a->requeteToutesStations('Lyon'));
+var_dump($a->requeteStation(2010, 'Lyon'));

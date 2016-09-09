@@ -18,8 +18,34 @@ class ApiRequester
     {
         $UrlBuilder = new UrlBuilder(UrlBuilder::$CONTRAT);
         $url = $UrlBuilder->buildUrl();
-        var_dump($url);
+//        var_dump($url);
+        return $this->envoyerGet($url);
 
+    }
+
+    public function requeteToutesStations($contrat)
+    {
+        $UrlBuilder = new UrlBuilder(UrlBuilder::$STATIONS);
+        if ($contrat) {
+            $UrlBuilder->setParametresGet(['contract' => $contrat]);
+            }
+        $url = $UrlBuilder->buildUrl();
+//        var_dump($url);
+        return $this->envoyerGet($url);
+    }
+
+    public function requeteStation($station_number, $contract_name){
+        $UrlBuilder = new UrlBuilder(UrlBuilder::$STATIONS);
+        $UrlBuilder->setCible($UrlBuilder->getCible(). '/' . $station_number);
+        if ($contract_name) {
+            $UrlBuilder->setParametresGet(['contract' => $contract_name]);
+        }
+        $url = $UrlBuilder->buildUrl();
+//        var_dump($url);
+        return $this->envoyerGet($url);
+    }
+
+    public function envoyerGet($url){
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
 
@@ -36,7 +62,6 @@ class ApiRequester
             return NULL;
         } else return $result;
     }
-
     /**
      * @return mixed
      */

@@ -12,4 +12,45 @@ namespace Api;
 class ApiRequester
 {
 
+    private $Http_Headers;
+
+    public function requeteTousContrats()
+    {
+        $UrlBuilder = new UrlBuilder(UrlBuilder::$CONTRAT);
+        $url = $UrlBuilder->buildUrl();
+        var_dump($url);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_VERBOSE, true);
+
+        $verbose = fopen('../results.txt', 'w+');
+        curl_setopt($ch, CURLOPT_STDERR, $verbose);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURL_HTTP_VERSION_1_1, true);
+
+        $result = curl_exec($ch);
+        if ($result === FALSE) {
+            printf("cUrl error (#%d): %s<br>\n", curl_errno($ch),
+                htmlspecialchars(curl_error($ch)));
+            return NULL;
+        } else return $result;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getHttpHeaders()
+    {
+        return $this->Http_Headers;
+    }
+
+    /**
+     * @param mixed $Http_Headers
+     */
+    public function setHttpHeaders($Http_Headers)
+    {
+        $this->Http_Headers = $Http_Headers;
+    }
+
 }

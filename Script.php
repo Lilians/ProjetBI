@@ -13,9 +13,16 @@ include_once 'Model/Station.php';
 include_once 'API/ApiRequester.php';
 include_once 'API/UrlBuilder.php';
 
+include 'DAO/Service.php';
+
+
 $a = new Api\ApiRequester();
 
+$s = new \DAO\Service();
 
-var_dump($a->requeteTousContrats());
-var_dump($a->requeteToutesStations('Lyon'));
-var_dump($a->requeteStation(2010, 'Lyon'));
+//$contrats = $s->peuplerContrats($a->requeteTousContrats());
+
+//$stations = $s->peuplerStations($a->requeteToutesStations('Lyon'));
+$stations = $s->peuplerStation($a->requeteStation(2010, 'Lyon'));
+var_dump($stations);
+

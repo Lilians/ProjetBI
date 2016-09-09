@@ -11,6 +11,8 @@ namespace Model;
 
 class Station
 {
+    public static $KEYS = ['number', 'contract_name', 'name', 'address', 'position', 'banking', 'bonus', 'status', 'bike_stands', 'available_bike_stands', 'available_bikes', 'last_update'];
+
     private $number;
     private $contract_name;
     private $name;
@@ -235,7 +237,6 @@ class Station
     {
         $this->last_update = $last_update;
     }
-
 
 
 }

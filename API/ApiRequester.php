@@ -19,7 +19,7 @@ class ApiRequester
         $UrlBuilder = new UrlBuilder(UrlBuilder::$CONTRAT);
         $url = $UrlBuilder->buildUrl();
 //        var_dump($url);
-        return $this->envoyerGet($url);
+        return json_decode($this->envoyerGet($url), true);
 
     }
 
@@ -31,7 +31,7 @@ class ApiRequester
             }
         $url = $UrlBuilder->buildUrl();
 //        var_dump($url);
-        return $this->envoyerGet($url);
+        return json_decode($this->envoyerGet($url), true);
     }
 
     public function requeteStation($station_number, $contract_name){
@@ -42,7 +42,7 @@ class ApiRequester
         }
         $url = $UrlBuilder->buildUrl();
 //        var_dump($url);
-        return $this->envoyerGet($url);
+        return json_decode($this->envoyerGet($url), true);
     }
 
     public function envoyerGet($url){

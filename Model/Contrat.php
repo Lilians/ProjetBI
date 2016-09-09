@@ -11,19 +11,21 @@ namespace Model;
 
 class Contrat
 {
+    public static $KEYS = ['name', 'commercial_name', 'country_code', 'cities'];
     private $name;
     private $commercial_name;
     private $country_code;
     private $cities;
 
-    public static function createContratFromArray($array){
+    public static function createContratFromArray($array)
+    {
         $C = new Contrat();
         $C->setName($array['name']);
         $C->setCommercialName($array['commercial_name']);
         $C->setCountryCode($array['country_code']);
 
         $C->cities = [];
-        foreach ($array['cities'] as $city){
+        foreach ($array['cities'] as $city) {
             $C->cities[] = $city;
         }
 

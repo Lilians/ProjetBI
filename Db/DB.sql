@@ -1,3 +1,4 @@
+# noinspection SqlNoDataSourceInspectionForFile
 Create database projetbi;
 
 CREATE TABLE contrat (

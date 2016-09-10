@@ -185,10 +185,10 @@ class DAO
 
     public function setStationCity(Station $station, City $city)
     {
-        $requete = "UPDATE STATION SET city_id = :city_id WHERE station_number= :station_number";
+        $requete = "UPDATE STATION SET city_name = :city_name WHERE station_number= :station_number";
         $parametres = array(
             'station_number' => $station->getNumber(),
-            'city_id' => $city->getId()
+            'city_id' => $city->getName()
         );
         $this->executerInsert($requete, $parametres);
     }

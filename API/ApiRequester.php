@@ -9,8 +9,6 @@
 namespace Api;
 
 
-use Model\Station;
-
 class ApiRequester
 {
 

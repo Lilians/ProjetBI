@@ -18,8 +18,6 @@ class Service
     //ToDO : Intégration BDD
 
 
-
-
     public function peuplerContrats($array)
     {
         $contrats = [];

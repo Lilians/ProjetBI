@@ -14,15 +14,21 @@ include_once 'API/ApiRequester.php';
 include_once 'API/UrlBuilder.php';
 
 include 'DAO/Service.php';
+include 'DAO/DAO.php';
 
 
 $a = new Api\ApiRequester();
 
 $s = new \DAO\Service();
 
-//$contrats = $s->peuplerContrats($a->requeteTousContrats());
+$dao = new \DAO\DAO();
 
-//$stations = $s->peuplerStations($a->requeteToutesStations('Lyon'));
-$stations = $s->peuplerStation($a->requeteStation(2010, 'Lyon'));
-var_dump($stations);
+$contrats = $s->peuplerContrats($a->requeteTousContrats());
+$dao->insertAllContrats($contrats);
+
+
+$stations = $s->peuplerStations($a->requeteToutesStations('Lyon'));
+//$stations = $s->peuplerStation($a->requeteStation(2010, 'Lyon'));
+$dao->insertAllStations($stations);
+//var_dump($stations);
 

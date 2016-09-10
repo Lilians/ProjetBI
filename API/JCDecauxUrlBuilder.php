@@ -9,7 +9,7 @@
 namespace Api;
 
 
-class UrlBuilder
+class JCDecauxUrlBuilder
 {
     private static $BASE_URL = "https://api.jcdecaux.com/vls/v1/";
     private static $API_KEY = "12f6bfe6467f8f8babf0784e7e867ddc9520276c";

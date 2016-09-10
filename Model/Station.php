@@ -8,6 +8,7 @@
 
 namespace Model;
 
+include 'Arrondissement.php';
 
 class Station
 {
@@ -16,15 +17,14 @@ class Station
     private $number;
     private $contract_name;
     private $name;
+    private $city;
+    private $arrondissement;
     private $address;
     private $position;
     private $banking;
     private $bonus;
     private $status;
     private $bike_stands;
-    private $available_bike_stands;
-    private $available_bikes;
-    private $last_update;
 
     public static function createStationFromArray($array)
     {
@@ -38,10 +38,8 @@ class Station
         $S->setBonus($array['bonus']);
         $S->setStatus($array['status']);
         $S->setBikeStands($array['bike_stands']);
-        $S->setAvailableBikeStands($array['available_bike_stands']);
-        $S->setAvailableBikes($array['available_bikes']);
-        $S->setLastUpdate($array['last_update']);
-
+        $S->setCity($c = new City($array['city']));
+        $S->setArrondissement(new Arrondissement($array['arrondissement'], $c));
         return $S;
 
     }
@@ -193,50 +191,33 @@ class Station
     /**
      * @return mixed
      */
-    public function getAvailableBikeStands()
+    public function getCity()
     {
-        return $this->available_bike_stands;
+        return $this->city;
     }
 
     /**
-     * @param mixed $available_bike_stands
+     * @param mixed $city
      */
-    public function setAvailableBikeStands($available_bike_stands)
+    public function setCity($city)
     {
-        $this->available_bike_stands = $available_bike_stands;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAvailableBikes()
-    {
-        return $this->available_bikes;
-    }
-
-    /**
-     * @param mixed $available_bikes
-     */
-    public function setAvailableBikes($available_bikes)
-    {
-        $this->available_bikes = $available_bikes;
+        $this->city = $city;
     }
 
     /**
      * @return mixed
      */
-    public function getLastUpdate()
+    public function getArrondissement()
     {
-        return $this->last_update;
+        return $this->arrondissement;
     }
 
     /**
-     * @param mixed $last_update
+     * @param mixed $arrondissement
      */
-    public function setLastUpdate($last_update)
+    public function setArrondissement($arrondissement)
     {
-        $this->last_update = $last_update;
+        $this->arrondissement = $arrondissement;
     }
-
 
 }

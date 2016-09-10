@@ -11,7 +11,7 @@ include_once 'Model/Position.php';
 include_once 'Model/Station.php';
 
 include_once 'API/ApiRequester.php';
-include_once 'API/UrlBuilder.php';
+include_once 'API/JCDecauxUrlBuilder.php';
 
 include 'DAO/Service.php';
 include 'DAO/DAO.php';
@@ -27,7 +27,7 @@ $contrats = $s->peuplerContrats($a->requeteTousContrats());
 $dao->insertAllContrats($contrats);
 
 
-$stations = $s->peuplerStations($a->requeteToutesStations('Lyon'));
+$stations = $s->peuplerStations($a->requeteComplementStations($a->requeteToutesStations('Lyon')));
 //$stations = $s->peuplerStation($a->requeteStation(2010, 'Lyon'));
 $dao->insertAllStations($stations);
 //var_dump($stations);

@@ -7,7 +7,7 @@
  */
 
 namespace Model;
-
+include 'City.php';
 
 class Contrat
 {
@@ -26,7 +26,7 @@ class Contrat
 
         $C->cities = [];
         foreach ($array['cities'] as $city) {
-            $C->cities[] = $city;
+            $C->cities[] = new City($city);
         }
 
         return $C;

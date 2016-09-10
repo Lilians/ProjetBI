@@ -9,6 +9,8 @@
 namespace DAO;
 
 
+use Model\Arrondissement;
+use Model\City;
 use Model\Contrat;
 use Model\Station;
 
@@ -19,7 +21,6 @@ class DAO
 
     /**
      * DAO constructor.
-     * @param $BDHandler
      */
     public function __construct()
     {
@@ -43,6 +44,9 @@ class DAO
     {
         $req = $this->BDHandler->prepare($requete);
         $req->execute($parametres);
+//        if ($req->errorInfo()[1] != NULL) {
+//            var_dump($req->errorInfo());
+//        }
     }
 
     public function insertContrat(Contrat $contrat)
@@ -53,11 +57,15 @@ class DAO
             'commercial_name' => $contrat->getCommercialName(),
             'country_code' => $contrat->getCountryCode()
         ];
+        foreach ($contrat->getCities() as $city) {
+            $this->insertCity($city, $contrat);
+        }
         $this->executerInsert($requete, $parametres);
     }
 
-    public function insertAllContrats($array){
-        foreach ($array as $contrat){
+    public function insertAllContrats($array)
+    {
+        foreach ($array as $contrat) {
             $this->insertContrat($contrat);
         }
     }
@@ -73,27 +81,53 @@ class DAO
         $this->executerInsert($requete, $parametres);
     }
 
-    public function insertStation(Station $station){
-        $requete = "INSERT INTO STATION VALUES (:station_number, :contrat_name, :station_name, :address, :banking, :bonus, :bike_stands)";
+    public function insertStation(Station $station)
+    {
+        if ($cities = $this->requeteCity($station->getCity())) {
+
+            if (array_count_values($cities) == 0) {
+                $this->insertCity($station->getCity(), $station->getContractName());
+            }
+        }
+//        $this->insertCity($station->getCity());
+        if (!$station->getArrondissement()->getId()) {
+            $this->insertArrondissement($station->getArrondissement());
+        }
+
+        $arr = $this->executerSelect('SELECT * FROM arrondissement WHERE arrondissement_name= :arrondissement_name', array(
+            'arrondissement_name' => $station->getArrondissement()->getName()
+        ));
+
+        $requete = "INSERT INTO STATION (station_number, city_name, arrondissement_id, contrat_name, station_name, address, banking, bonus, bike_stands) VALUES (:station_number, :city_name, :arrondissement_id, :contrat_name, :station_name, :address, :banking, :bonus, :bike_stands)";
         $parametres = array(
             'station_number' => $station->getNumber(),
+            'city_name' => $station->getCity()->getName(),
+            'arrondissement_id' => $arr['arrondissement_id'],
             'contrat_name' => $station->getContractName(),
             'station_name' => $station->getName(),
             'address' => $station->getAddress(),
             'banking' => $station->getBanking(),
             'bonus' => $station->getBonus(),
-            'bike_stands' => $station->getBikeStands()
+            'bike_stands' => $station->getBikeStands(),
         );
         $this->executerInsert($requete, $parametres);
     }
 
-    public function insertAllStations($array){
-        foreach($array as $station){
+    public function requeteCity(City $city)
+    {
+        $requete = "SELECT * FROM city WHERE city_name = :city_name";
+        return $this->executerSelect($requete, array('city_name' => $city->getName()));
+    }
+
+    public function insertAllStations($array)
+    {
+        foreach ($array as $station) {
             $this->insertStation($station);
         }
     }
 
-    public function updateStation(Station $station){
+    public function updateStation(Station $station)
+    {
         $requete = "UPDATE STATION SET contrat_name= :contrat_name, station_name =:station_name, address =:address, banking =:banking, bonus=:bonus, bike_stands=:bike_stands WHERE station_number=:station_number";
         $parametres = array(
             'station_number' => $station->getNumber(),
@@ -107,5 +141,55 @@ class DAO
         $this->executerInsert($requete, $parametres);
     }
 
+    public function insertCity(City $city, $c)
+    {
+        $requete = "INSERT INTO city (city_name, contrat_name) VALUE (:city_name, :contrat_name)";
+        $parametres = array(
+            'city_name' => $city->getName(),
+            'contrat_name' => $c instanceof Contrat ? $c->getName() : $c
 
+        );
+
+        $this->executerInsert($requete, $parametres);
+    }
+
+    public function insertArrondissement(Arrondissement $arrondissement)
+    {
+        if ($arrondissement->getId() != null) {
+            $requete = "INSERT INTO arrondissement VALUES (:arrondissement_id, :city_name, :arrondissement_name)";
+            $parametres = array(
+                'arrondissement_id' => $arrondissement->getId(),
+                'city_name' => $arrondissement->getCity()->getName(),
+                'arrondissement_name' => $arrondissement->getName()
+            );
+        } else {
+            $requete = "INSERT INTO arrondissement (arrondissement_name) VALUE (:arrondissement_name)";
+            $parametres = array(
+                'arrondissement_name' => $arrondissement->getName()
+            );
+        }
+
+
+        $this->executerInsert($requete, $parametres);
+    }
+
+    public function setStationArrondissement(Station $station, Arrondissement $arrondissement)
+    {
+        $requete = "UPDATE STATION SET arrondissement_id = :arrondissement_id WHERE station_number= :station_number";
+        $parametres = array(
+            'station_number' => $station->getNumber(),
+            'arrondissement_id' => $arrondissement->getId()
+        );
+        $this->executerInsert($requete, $parametres);
+    }
+
+    public function setStationCity(Station $station, City $city)
+    {
+        $requete = "UPDATE STATION SET city_id = :city_id WHERE station_number= :station_number";
+        $parametres = array(
+            'station_number' => $station->getNumber(),
+            'city_id' => $city->getId()
+        );
+        $this->executerInsert($requete, $parametres);
+    }
 }

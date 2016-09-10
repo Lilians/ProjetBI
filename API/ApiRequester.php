@@ -9,6 +9,8 @@
 namespace Api;
 
 
+use Model\Station;
+
 class ApiRequester
 {
 
@@ -16,7 +18,7 @@ class ApiRequester
 
     public function requeteTousContrats()
     {
-        $UrlBuilder = new UrlBuilder(UrlBuilder::$CONTRAT);
+        $UrlBuilder = new JCDecauxUrlBuilder(JCDecauxUrlBuilder::$CONTRAT);
         $url = $UrlBuilder->buildUrl();
 //        var_dump($url);
         return json_decode($this->envoyerGet($url), true);
@@ -25,18 +27,42 @@ class ApiRequester
 
     public function requeteToutesStations($contrat)
     {
-        $UrlBuilder = new UrlBuilder(UrlBuilder::$STATIONS);
+        $UrlBuilder = new JCDecauxUrlBuilder(JCDecauxUrlBuilder::$STATIONS);
         if ($contrat) {
             $UrlBuilder->setParametresGet(['contract' => $contrat]);
-            }
+        }
         $url = $UrlBuilder->buildUrl();
 //        var_dump($url);
         return json_decode($this->envoyerGet($url), true);
     }
 
-    public function requeteStation($station_number, $contract_name){
-        $UrlBuilder = new UrlBuilder(UrlBuilder::$STATIONS);
-        $UrlBuilder->setCible($UrlBuilder->getCible(). '/' . $station_number);
+    public function requeteComplementStations($stations)
+    {
+        $str = file_get_contents('./Db/pvo_patrimoine_voirie.pvostationvelov_all.json-json.txt');
+        $lines = explode(PHP_EOL, $str);
+
+        $jsonData = file_get_contents($lines[1]);
+        $Data = json_decode($jsonData, true)['values'];
+
+        foreach ($stations as $key => $station) {
+            foreach ($Data as $item) {
+                if ($station['number'] == $item['idstation']) {
+
+                    $tab = explode(' ', $item['commune']);
+                    $station['city'] = $tab[0];
+                    $station['arrondissement'] = sizeof($tab) > 1 ? $tab[1].' '.$tab[2] : '-';
+                    $stations[$key]=  $station;
+                }
+            }
+        }
+
+        return $stations;
+    }
+
+    public function requeteStation($station_number, $contract_name)
+    {
+        $UrlBuilder = new JCDecauxUrlBuilder(JCDecauxUrlBuilder::$STATIONS);
+        $UrlBuilder->setCible($UrlBuilder->getCible() . '/' . $station_number);
         if ($contract_name) {
             $UrlBuilder->setParametresGet(['contract' => $contract_name]);
         }
@@ -45,7 +71,8 @@ class ApiRequester
         return json_decode($this->envoyerGet($url), true);
     }
 
-    public function envoyerGet($url){
+    public function envoyerGet($url)
+    {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_VERBOSE, true);
 
@@ -62,6 +89,7 @@ class ApiRequester
             return NULL;
         } else return $result;
     }
+
     /**
      * @return mixed
      */

@@ -17,6 +17,7 @@ class City
     private $contract_name;
 
     /**
+     * Construit un objet City, si l'objet à construire existe déjà en base, renvoie celui en base de données
      * City constructor.
      * @param $name
      */

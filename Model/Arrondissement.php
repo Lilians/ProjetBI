@@ -18,6 +18,7 @@ class Arrondissement
     private $city;
 
     /**
+     * Construit un objet arrondissement, si l'objet existe déjà en base, utilise celui de la base
      * Arrondissement constructor.
      * @param $name
      */

@@ -8,7 +8,11 @@
 
 namespace Api;
 
-
+/**
+ * Cette classe construit les URLs utilisée pour requêter l'API de JCDecaux
+ * Class JCDecauxUrlBuilder
+ * @package Api
+ */
 class JCDecauxUrlBuilder
 {
     private static $BASE_URL = "https://api.jcdecaux.com/vls/v1/";

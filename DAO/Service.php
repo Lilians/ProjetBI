@@ -13,6 +13,11 @@ namespace DAO;
 use Model\Contrat;
 use Model\Station;
 
+/**
+ * Effectue les conversions de tableaux associatifs en objets du modèle
+ * Class Service
+ * @package DAO
+ */
 class Service
 {
     //ToDO : Intégration BDD
@@ -31,16 +36,6 @@ class Service
     {
         $contrat = Contrat::createContratFromArray($array);
         return $contrat;
-    }
-
-    public function peuplerVilles($array)
-    {
-
-    }
-
-    public function peuplerVille($array)
-    {
-
     }
 
     public function peuplerStations($array)

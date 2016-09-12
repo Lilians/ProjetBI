@@ -14,6 +14,11 @@ use Model\City;
 use Model\Contrat;
 use Model\Station;
 
+/**
+ * Effectue la liaison avec la base de donneés
+ * Class DAO
+ * @package DAO
+ */
 class DAO
 {
 

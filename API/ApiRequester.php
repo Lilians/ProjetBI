@@ -8,12 +8,23 @@
 
 namespace Api;
 
-
+/**
+ * Cette classe requête les différentes sources de données et renvoie le résultat sous forme de tableaux associatifs
+ * Class ApiRequester
+ * @package Api
+ */
 class ApiRequester
 {
-
+    /**
+     * Tableau d'en-têtes HTTP (pas encore utilisé)
+     * @var
+     */
     private $Http_Headers;
 
+    /**
+     * Récupère la liste des contrats auprès de JCDecaux
+     * @return mixed
+     */
     public function requeteTousContrats()
     {
         $UrlBuilder = new JCDecauxUrlBuilder(JCDecauxUrlBuilder::$CONTRAT);
@@ -23,6 +34,11 @@ class ApiRequester
 
     }
 
+    /**
+     * Récupère l'ensemble des stations associées à un contrat JCDecaux
+     * @param $contrat
+     * @return mixed
+     */
     public function requeteToutesStations($contrat)
     {
         $UrlBuilder = new JCDecauxUrlBuilder(JCDecauxUrlBuilder::$STATIONS);
@@ -34,6 +50,11 @@ class ApiRequester
         return json_decode($this->envoyerGet($url), true);
     }
 
+    /**
+     * Requete les informations complémentaires à une station JCDecaux (arrondissement)
+     * @param $stations
+     * @return mixed
+     */
     public function requeteComplementStations($stations)
     {
         $str = file_get_contents('./Db/pvo_patrimoine_voirie.pvostationvelov_all.json-json.txt');
@@ -57,6 +78,12 @@ class ApiRequester
         return $stations;
     }
 
+    /**
+     * Récupère les informations relatives à une station JCDecaux
+     * @param $station_number
+     * @param $contract_name
+     * @return mixed
+     */
     public function requeteStation($station_number, $contract_name)
     {
         $UrlBuilder = new JCDecauxUrlBuilder(JCDecauxUrlBuilder::$STATIONS);
@@ -69,6 +96,11 @@ class ApiRequester
         return json_decode($this->envoyerGet($url), true);
     }
 
+    /**
+     * Envoie une requête GET à l'URL spécifiée et retourne le résultat
+     * @param $url
+     * @return mixed|null
+     */
     public function envoyerGet($url)
     {
         $ch = curl_init($url);

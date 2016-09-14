@@ -13,6 +13,7 @@ use Model\Arrondissement;
 use Model\City;
 use Model\Contrat;
 use Model\Station;
+use Model\StationSnapshot;
 
 /**
  * Effectue la liaison avec la base de donneés
@@ -52,6 +53,17 @@ class DAO
 //        if ($req->errorInfo()[1] != NULL) {
 //            var_dump($req->errorInfo());
 //        }
+    }
+
+    public function insertStationSnapshot(StationSnapshot $snapshot){
+        $requete = "INSERT INTO station_snapshot(station_number, available_bike_stands, available_bikes, last_update) VALUES (:station_number, :available_bike_stands, :available_bikes, :last_update)";
+        $parametres = [
+            'station_number' => $snapshot->getStationNumber(),
+            'available_bike_stands' => $snapshot->getAvailableBikeStands(),
+            'available_bikes' => $snapshot->getAvailableBikes(),
+            'last_update' => $snapshot->getLastUpdate()
+        ];
+        $this->executerInsert($requete, $parametres);
     }
 
     public function insertContrat(Contrat $contrat)

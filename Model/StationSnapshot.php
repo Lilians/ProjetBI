@@ -17,6 +17,16 @@ class StationSnapshot
     private $available_bikes;
     private $last_update;
 
+    public static function createStationSnapshotFromArray($array)
+    {
+        $Snap = new StationSnapshot();
+        $Snap->setStationNumber($array['station_number']);
+        $Snap->setLastUpdate($array['last_update']);
+        $Snap->setAvailableBikeStands($array['available_bike_stands']);
+        $Snap->setAvailableBikes($array['available_bikes']);
+        return $Snap;
+    }
+
     /**
      * @return mixed
      */

@@ -9,6 +9,7 @@
 namespace Model;
 
 include 'Arrondissement.php';
+include 'StationSnapshot.php';
 
 class Station
 {
@@ -25,6 +26,7 @@ class Station
     private $bonus;
     private $status;
     private $bike_stands;
+    private $snapshots;
 
     public static function createStationFromArray($array)
     {
@@ -40,6 +42,15 @@ class Station
         $S->setBikeStands($array['bike_stands']);
         $S->setCity($c = new City($array['city']));
         $S->setArrondissement(new Arrondissement($array['arrondissement'], $c));
+
+
+        $S->snapshots = [];
+        $snapshot =  new StationSnapshot();
+        $snapshot->setAvailableBikeStands($array['available_bike_stands']);
+        $snapshot->setLastUpdate($array['last_update']);
+        $snapshot->setStationNumber($array['number']);
+        $snapshot->setAvailableBikes($array['available_bikes']);
+        $S->snapshots[] = $snapshot;
         return $S;
 
     }
@@ -218,6 +229,22 @@ class Station
     public function setArrondissement($arrondissement)
     {
         $this->arrondissement = $arrondissement;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSnapshots()
+    {
+        return $this->snapshots;
+    }
+
+    /**
+     * @param mixed $snapshots
+     */
+    public function setSnapshots($snapshots)
+    {
+        $this->snapshots = $snapshots;
     }
 
 }

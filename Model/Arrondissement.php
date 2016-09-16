@@ -18,9 +18,9 @@ class Arrondissement
     private $city;
 
     /**
-     * Construit un objet arrondissement, si l'objet existe déjà en base, utilise celui de la base
      * Arrondissement constructor.
      * @param $name
+     * @param City $city
      */
     public function __construct($name, City $city)
     {
@@ -28,7 +28,7 @@ class Arrondissement
         $this->city = $city;
 
         $dao = new DAO();
-        $res = $dao->executerSelect('SELECT * FROM arrondissement WHERE arrondissement_name = :arrondissement_name AND city_name=:city_name', [
+        $res = $dao->executerSelect('SELECT * FROM arrondissement WHERE arrondissement_name = :arrondissement_name AND city_name=:city_name;', [
             'arrondissement_name' => $name,
             'city_name' => $city->getName()
         ]);

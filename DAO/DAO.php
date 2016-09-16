@@ -50,9 +50,9 @@ class DAO
     {
         $req = $this->BDHandler->prepare($requete);
         $req->execute($parametres);
-//        if ($req->errorInfo()[1] != NULL) {
-//            var_dump($req->errorInfo());
-//        }
+        if ($req->errorInfo()[1] != NULL) {
+            var_dump($req->errorInfo());
+        }
     }
 
     public function insertStationSnapshot(StationSnapshot $snapshot){
@@ -74,10 +74,10 @@ class DAO
             'commercial_name' => $contrat->getCommercialName(),
             'country_code' => $contrat->getCountryCode()
         ];
+        $this->executerInsert($requete, $parametres);
         foreach ($contrat->getCities() as $city) {
             $this->insertCity($city, $contrat);
         }
-        $this->executerInsert($requete, $parametres);
     }
 
     public function insertAllContrats($array)
@@ -128,6 +128,10 @@ class DAO
             'bike_stands' => $station->getBikeStands(),
         );
         $this->executerInsert($requete, $parametres);
+
+        foreach ($station->getSnapshots() as $snapshot){
+            $this->insertStationSnapshot($snapshot);
+        }
     }
 
     public function requeteCity(City $city)
@@ -180,9 +184,10 @@ class DAO
                 'arrondissement_name' => $arrondissement->getName()
             );
         } else {
-            $requete = "INSERT INTO arrondissement (arrondissement_name) VALUE (:arrondissement_name)";
+            $requete = "INSERT INTO arrondissement (arrondissement_name, city_name) VALUE (:arrondissement_name, :city_name)";
             $parametres = array(
-                'arrondissement_name' => $arrondissement->getName()
+                'arrondissement_name' => $arrondissement->getName(),
+                'city_name' => $arrondissement->getCity()->getName()
             );
         }
 

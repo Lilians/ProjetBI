@@ -24,11 +24,6 @@ class City
     public function __construct($name)
     {
         $this->name = strtoupper($name);
-        $dao = new DAO();
-        $res = $dao->executerSelect('SELECT * FROM city WHERE city_name=:city_name', ['city_name' => $this->name]);
-        if(!empty($res)){
-            $this->contract_name = $res['contrat_name'];
-        }
     }
 
         /**

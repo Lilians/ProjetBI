@@ -26,16 +26,6 @@ class Arrondissement
     {
         $this->name = $name;
         $this->city = $city;
-
-        $dao = new DAO();
-        $res = $dao->executerSelect('SELECT * FROM arrondissement WHERE arrondissement_name = :arrondissement_name AND city_name=:city_name;', [
-            'arrondissement_name' => $name,
-            'city_name' => $city->getName()
-        ]);
-
-        if (!empty($res)) {
-            $this->id = $res['arrondissement_id'];
-        }
     }
 
 

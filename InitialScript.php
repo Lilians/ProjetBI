@@ -27,8 +27,15 @@ $contrats = $s->peuplerContrats($a->requeteTousContrats());
 $dao->insertAllContrats($contrats);
 
 
-$stations = $s->peuplerStations($a->requeteComplementStations($a->requeteToutesStations('Lyon')));
+$stations_array = $a->requeteComplementStations($a->requeteToutesStations('Lyon'));
+
+
+$stations = $s->peuplerStations($stations_array);
+
 //$stations = $s->peuplerStation($a->requeteStation(2010, 'Lyon'));
+$arrondissements = [];
+
+
 $dao->insertAllStations($stations);
 //var_dump($stations);
 

@@ -11,7 +11,6 @@ include 'City.php';
 
 class Contrat
 {
-    public static $KEYS = ['name', 'commercial_name', 'country_code', 'cities'];
     private $name;
     private $commercial_name;
     private $country_code;

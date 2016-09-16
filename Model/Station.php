@@ -13,8 +13,6 @@ include 'StationSnapshot.php';
 
 class Station
 {
-    public static $KEYS = ['number', 'contract_name', 'name', 'address', 'position', 'banking', 'bonus', 'status', 'bike_stands', 'available_bike_stands', 'available_bikes', 'last_update'];
-
     private $number;
     private $contract_name;
     private $name;
@@ -45,11 +43,7 @@ class Station
 
 
         $S->snapshots = [];
-        $snapshot =  new StationSnapshot();
-        $snapshot->setAvailableBikeStands($array['available_bike_stands']);
-        $snapshot->setLastUpdate($array['last_update']);
-        $snapshot->setStationNumber($array['number']);
-        $snapshot->setAvailableBikes($array['available_bikes']);
+        $snapshot =  StationSnapshot::createStationSnapshotFromArray($array);
         $S->snapshots[] = $snapshot;
         return $S;
 

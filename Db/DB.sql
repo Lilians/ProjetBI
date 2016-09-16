@@ -16,7 +16,8 @@ CREATE TABLE arrondissement (
     city_name VARCHAR(50),
     arrondissement_name VARCHAR(50),
     FOREIGN KEY (city_name)
-        REFERENCES city (city_name)
+        REFERENCES city (city_name),
+    UNIQUE (city_name, arrondissement_name)
 );
 CREATE TABLE station (
     station_number INT NOT NULL PRIMARY KEY,
@@ -28,6 +29,8 @@ CREATE TABLE station (
     banking BOOLEAN,
     bonus BOOLEAN,
     bike_stands INT,
+    latitude FLOAT(8,6),
+    longitude FLOAT(8,6),
     FOREIGN KEY (contrat_name)
         REFERENCES contrat (contrat_name),
     FOREIGN KEY (city_name)

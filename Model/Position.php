@@ -12,7 +12,6 @@ namespace Model;
 class Position
 {
 
-    public static $KEYS = ['lat', 'lng'];
     private $lat;
     private $lng;
 

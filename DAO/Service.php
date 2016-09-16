@@ -10,6 +10,8 @@
 namespace DAO;
 
 
+use Model\Arrondissement;
+use Model\City;
 use Model\Contrat;
 use Model\Station;
 
@@ -20,8 +22,6 @@ use Model\Station;
  */
 class Service
 {
-    //ToDO : Intégration BDD
-
 
     public function peuplerContrats($array)
     {

@@ -50,9 +50,10 @@ class DAO
     {
         $req = $this->BDHandler->prepare($requete);
         $req->execute($parametres);
-        if ($req->errorInfo()[1] != NULL) {
-            var_dump($req->errorInfo());
-        }
+//        $a = $req->errorInfo()[1];/// DEBUG
+//        if ($a != NULL) {
+//            var_dump($req->errorInfo());
+//        }
     }
 
     public function insertStationSnapshot(StationSnapshot $snapshot){
@@ -106,7 +107,6 @@ class DAO
                 $this->insertCity($station->getCity(), $station->getContractName());
             }
         }
-//        $this->insertCity($station->getCity());
         if (!$station->getArrondissement()->getId()) {
             $this->insertArrondissement($station->getArrondissement());
         }
@@ -115,7 +115,7 @@ class DAO
             'arrondissement_name' => $station->getArrondissement()->getName()
         ));
 
-        $requete = "INSERT INTO STATION (station_number, city_name, arrondissement_id, contrat_name, station_name, address, banking, bonus, bike_stands) VALUES (:station_number, :city_name, :arrondissement_id, :contrat_name, :station_name, :address, :banking, :bonus, :bike_stands)";
+        $requete = "INSERT INTO STATION (station_number, city_name, arrondissement_id, contrat_name, station_name, address, banking, bonus, bike_stands, latitude, longitude) VALUES (:station_number, :city_name, :arrondissement_id, :contrat_name, :station_name, :address, :banking, :bonus, :bike_stands, :latitude, :longitude)";
         $parametres = array(
             'station_number' => $station->getNumber(),
             'city_name' => $station->getCity()->getName(),
@@ -126,6 +126,8 @@ class DAO
             'banking' => $station->getBanking(),
             'bonus' => $station->getBonus(),
             'bike_stands' => $station->getBikeStands(),
+            'latitude' => $station->getPosition()->getLat(),
+            'longitude' => $station->getPosition()->getLng()
         );
         $this->executerInsert($requete, $parametres);
 
@@ -149,7 +151,7 @@ class DAO
 
     public function updateStation(Station $station)
     {
-        $requete = "UPDATE STATION SET contrat_name= :contrat_name, station_name =:station_name, address =:address, banking =:banking, bonus=:bonus, bike_stands=:bike_stands WHERE station_number=:station_number";
+        $requete = "UPDATE STATION SET contrat_name= :contrat_name, station_name =:station_name, address =:address, banking =:banking, bonus=:bonus, bike_stands=:bike_stands, latitude=:latitude, longitude=:longitude WHERE station_number=:station_number";
         $parametres = array(
             'station_number' => $station->getNumber(),
             'contrat_name' => $station->getContractName(),
@@ -157,7 +159,9 @@ class DAO
             'address' => $station->getAddress(),
             'banking' => $station->getBanking(),
             'bonus' => $station->getBonus(),
-            'bike_stands' => $station->getBikeStands()
+            'bike_stands' => $station->getBikeStands(),
+            'latitude' => $station->getPosition()->getLat(),
+            'longitude' => $station->getPosition()->getLng()
         );
         $this->executerInsert($requete, $parametres);
     }

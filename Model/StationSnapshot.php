@@ -20,8 +20,9 @@ class StationSnapshot
     public static function createStationSnapshotFromArray($array)
     {
         $Snap = new StationSnapshot();
-        $Snap->setStationNumber($array['station_number']);
-        $Snap->setLastUpdate($array['last_update']);
+        $Snap->setStationNumber($array['number']);
+        $date = date('Y-m-d H:i:s', $array['last_update'] / 1000);
+        $Snap->setLastUpdate($date);
         $Snap->setAvailableBikeStands($array['available_bike_stands']);
         $Snap->setAvailableBikes($array['available_bikes']);
         return $Snap;
@@ -106,8 +107,4 @@ class StationSnapshot
     {
         $this->last_update = $last_update;
     }
-
-
-
-
 }

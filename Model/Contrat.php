@@ -7,7 +7,7 @@
  */
 
 namespace Model;
-include 'City.php';
+include_once 'City.php';
 
 class Contrat
 {

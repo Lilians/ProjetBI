@@ -7,6 +7,8 @@
  */
 
 namespace Api;
+include_once 'MeteoUrlBuilder.php';
+include_once 'JCDecauxUrlBuilder.php';
 
 /**
  * Cette classe requête les différentes sources de données et renvoie le résultat sous forme de tableaux associatifs
@@ -134,6 +136,19 @@ class ApiRequester
     public function setHttpHeaders($Http_Headers)
     {
         $this->Http_Headers = $Http_Headers;
+    }
+	
+	/**
+     * Récupère les données météorologiques selon la latitude et la longitude passée en paramètre
+     * @param $lat, $lng
+     * @return mixed
+     */
+    public function requeteMeteo($lat, $lng)
+    {
+        $UrlBuilder = new MeteoUrlBuilder();
+        $url = $UrlBuilder->buildUrl($lat, $lng);
+//        var_dump($url);
+        return json_decode($this->envoyerGet($url), true);
     }
 
 }

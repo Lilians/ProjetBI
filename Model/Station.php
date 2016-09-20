@@ -8,8 +8,8 @@
 
 namespace Model;
 
-include 'Arrondissement.php';
-include 'StationSnapshot.php';
+include_once 'Arrondissement.php';
+include_once 'StationSnapshot.php';
 
 class Station
 {

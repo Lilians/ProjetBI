@@ -16,16 +16,23 @@ class Arrondissement
     private $id;
     private $name;
     private $city;
+    private $latitude;
+    private $longitude;
 
+    
     /**
      * Arrondissement constructor.
      * @param $name
      * @param City $city
+     * @param float $lat
+     * @param float $lng
      */
-    public function __construct($name, City $city)
+    public function __construct($name, City $city, $lat=0.0, $lng=0.0)
     {
         $this->name = $name;
         $this->city = $city;
+        $this->latitude = $lat;
+        $this->longitude = $lng;
     }
 
 
@@ -75,6 +82,26 @@ class Arrondissement
     public function setCity($city)
     {
         $this->city = $city;
+    }
+
+    function getLatitude()
+    {
+        return $this->latitude;
+    }
+
+    function getLongitude()
+    {
+        return $this->longitude;
+    }
+
+    function setLatitude($latitude)
+    {
+        $this->latitude = $latitude;
+    }
+
+    function setLongitude($longitude)
+    {
+        $this->longitude = $longitude;
     }
 
 

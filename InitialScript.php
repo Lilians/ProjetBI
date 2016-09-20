@@ -13,8 +13,8 @@ include_once 'Model/Station.php';
 include_once 'API/ApiRequester.php';
 include_once 'API/JCDecauxUrlBuilder.php';
 
-include 'DAO/Service.php';
-include 'DAO/DAO.php';
+include_once 'DAO/Service.php';
+include_once 'DAO/DAO.php';
 
 
 $a = new Api\ApiRequester();

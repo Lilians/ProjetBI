@@ -28,7 +28,14 @@ CREATE TABLE Contract (
 
 CREATE TABLE Weather (
 	weather_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	precip_intensity FLOAT(3,2),
+	precip_probability FLOAT(3,2),
 	temperature INT,
+	apparent_temperture INT,
+	humidity FLOAT(3,2),
+	wind_speed INT,
+	wind_bearing FLOAT(3,2),
+	cloud_cover FLOAT(3,2),
 	weather_label VARCHAR(50)
 );
 

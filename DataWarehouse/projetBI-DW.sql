@@ -30,11 +30,11 @@ CREATE TABLE Weather (
 	weather_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	precip_intensity FLOAT(3,2),
 	precip_probability FLOAT(3,2),
-	temperature INT,
-	apparent_temperture INT,
+	temperature FLOAT(3,1),
+	apparent_temperture FLOAT(3,1),
 	humidity FLOAT(3,2),
-	wind_speed INT,
-	wind_bearing FLOAT(3,2),
+	wind_speed FLOAT(5,2),
+	wind_bearing INT,
 	cloud_cover FLOAT(3,2),
 	weather_label VARCHAR(50)
 );

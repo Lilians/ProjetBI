@@ -54,6 +54,15 @@ CREATE TABLE meteo_arrondissement_snapshot (
     arrondissement_id INT,
     last_time DATETIME NOT NULL,
     last_update DATETIME NOT NULL,
+    summary VARCHAR(50),
+    temperature FLOAT(3,1),
+    apparent_temperature FLOAT(3,1),
+    humidity FLOAT(3,2),
+    cloud_cover FLOAT(3,2),
+    wind_speed FLOAT(5,2),
+    wind_bearing INT,
+    precip_intensity FLOAT(3,2),
+    precip_probability FLOAT(3,2),
     FOREIGN KEY (arrondissement_id)
         REFERENCES arrondissement (arrondissement_id)
 );

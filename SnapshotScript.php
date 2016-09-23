@@ -21,13 +21,13 @@
 
   $dao = new \DAO\DAO();
   
-  /**
+  
   //ajout snapshot stations
   $stations_array = $a->requeteComplementStations($a->requeteToutesStations('Lyon'));
   
   foreach ($stations_array as $array){
       $dao->insertStationSnapshot(Model\StationSnapshot::createStationSnapshotFromArray($array));
-  }*/
+  }
   
   //ajout snapshot meteo arrondissement
   $meteoArrondissementSnapshots = $dao->getLastMeteoArrondissementSnapshot();

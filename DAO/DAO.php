@@ -59,10 +59,10 @@ class DAO
     {
         $req = $this->BDHandler->prepare($requete);
         $req->execute($parametres);
-//        $a = $req->errorInfo()[1];/// DEBUG
-//        if ($a != NULL) {
-//            var_dump($req->errorInfo());
-//        }
+        $a = $req->errorInfo()[1];/// DEBUG
+        if ($a != NULL) {
+            var_dump($req->errorInfo());
+        }
     }
     
     public function insertAllContrats($array)
@@ -278,8 +278,16 @@ class DAO
                $mas->setArrondissement($this->getArrondissement($masa['arrondissement_id']));
                $mas->setLastUpdate($masa['last_update']);
                $mas->setLastTime($masa['last_time']);
+               $mas->setSummary($masa['summary']);
+               $mas->setTemperature($masa['temperature']);
+               $mas->setApparentEmperature($masa['summary']);
+               $mas->setCloudCover($masa['cloud_cover']);
+               $mas->setHumidity($masa['humidity']);
+               $mas->setPrecipIntensity($masa['precip_intensity']);
+               $mas->setPrecipProbability($masa['precip_probability']);
+               $mas->setWindBearing($masa['wind_bearing']);
+               $mas->setWindSpeed($masa['wind_speed']);
                $masReturn[] = $mas;
-               
             }
             return $masReturn;
         }
@@ -288,11 +296,21 @@ class DAO
     }
     
     public function insertMeteoArrondissementSnapshot(\Model\MeteoArrondissementSnapshot $snapshot){
-        $requete = "INSERT INTO meteo_arrondissement_snapshot (arrondissement_id, last_time, last_update) VALUES (:arrondissement, :last_time, :last_update)";
+        $requete = "INSERT INTO meteo_arrondissement_snapshot (arrondissement_id, last_time, last_update, summary, temperature, apparent_temperature, humidity, cloud_cover, wind_bearing, wind_speed, precip_intensity, precip_probability) "
+                . "VALUES (:arrondissement_id, :last_time, :last_update, :summary, :temperature, :apparent_temperature, :humidity, :cloud_cover, :wind_bearing, :wind_speed, :precip_intensity, :precip_probability)";
         $parametres = [
-            'arrondissement' => $snapshot->getArrondissement()->getId(),
+            'arrondissement_id' => $snapshot->getArrondissement()->getId(),
             'last_time' => $snapshot->getLastTime(),
-            'last_update' => $snapshot->getLastUpdate()
+            'last_update' => $snapshot->getLastUpdate(),
+            'summary' => $snapshot->getSummary(),
+            'temperature' => $snapshot->getTemperature(),
+            'apparent_temperature' => $snapshot->getApparentTemperature(),
+            'humidity' => $snapshot->getHumidity(),
+            'cloud_cover' => $snapshot->getCloudCover(),
+            'wind_bearing' => $snapshot->getWindBearing(),
+            'wind_speed' => $snapshot->getWindSpeed(),
+            'precip_intensity' => $snapshot->getPrecipIntensity(),
+            'precip_probability' => $snapshot->getPrecipProbability()
         ];
         $this->executerInsert($requete, $parametres);
     }

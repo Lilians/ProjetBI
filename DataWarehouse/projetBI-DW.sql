@@ -40,18 +40,21 @@ CREATE TABLE Weather (
 );
 
 CREATE TABLE DayWeek (
-	day_week_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`day` INT,
+	day_week_id VARCHAR(20) PRIMARY KEY,
+	day INT,
+	day_label VARCHAR(15),
 	week INT,
-	`month` INT,
-	`year` INT
+	month INT,
+	year INT,
+	holidays BOOLEAN DEFAULT FALSE,
+	non_working_day BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE MinuteHour (
-	minute_hour_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE Hour (
+	hour_id VARCHAR(20) PRIMARY KEY,
 	day_week_id INT,
-	`hour` INT,
-	`minute` INT,
+	hour INT,
+	half_hour INT,
 	FOREIGN KEY (day_week_id)
 		REFERENCES DayWeek(day_week_id)
 );
@@ -72,4 +75,15 @@ CREATE TABLE Snapshot (
 		REFERENCES MinuteHour(minute_hour_id),
 	FOREIGN KEY (weather_id)
 		REFERENCES Weather(weather_id)
+);
+
+CREATE TABLE Neighborhood (
+	neighborhood_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	station_street_id_1 INT,
+	station_street_id_2 INT,
+	distance INT,
+	FOREIGN KEY (station_street_id_1)
+		REFERENCES StationStreet(station_street_id),
+	FOREIGN KEY (station_street_id_2)
+		REFERENCES StationStreet(station_street_id)
 );

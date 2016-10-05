@@ -25,7 +25,8 @@ class DAO
 {
 
     private $BDHandler;
-
+    public static $CITIES = [];
+    public static $ARRONDISSEMENTS = [];
     /**
      * DAO constructor.
      */
@@ -61,7 +62,11 @@ class DAO
         $req->execute($parametres);
         $a = $req->errorInfo()[1];/// DEBUG
         if ($a != NULL) {
+            var_dump("/////////////////////////////////////////");
             var_dump($req->errorInfo());
+            var_dump($requete);
+            var_dump($parametres);
+            var_dump("/////////////////////////////////////////");
         }
     }
     
@@ -83,6 +88,11 @@ class DAO
         $this->executerInsert($requete, $parametres);
         foreach ($contrat->getCities() as $city) {
             $this->insertCity($city, $contrat);
+        }
+        if($contrat->getName() == "Lyon") {
+            $Venissieux = new City("VENISSIEUX");
+            $Venissieux->setContractName("Lyon");
+            $this->insertCity($Venissieux, $contrat);
         }
     }
 
@@ -206,14 +216,17 @@ class DAO
 
     public function insertCity(City $city, $c)
     {
-        $requete = "INSERT INTO city (city_name, contrat_name) VALUE (:city_name, :contrat_name)";
-        $parametres = array(
-            'city_name' => $city->getName(),
-            'contrat_name' => $c instanceof Contrat ? $c->getName() : $c
+        if(!array_key_exists($city->getName(), DAO::$CITIES)) {
+            $requete = "INSERT INTO city (city_name, contrat_name) VALUE (:city_name, :contrat_name)";
+            $parametres = array(
+                'city_name' => $city->getName(),
+                'contrat_name' => $c instanceof Contrat ? $c->getName() : $c
 
-        );
+            );
+            $this->executerInsert($requete, $parametres);
+            DAO::$CITIES[$city->getName()] = 1;
+        }
 
-        $this->executerInsert($requete, $parametres);
     }
     
      public function getArrondissement($id)
@@ -245,23 +258,26 @@ class DAO
 
     public function insertArrondissement(Arrondissement $arrondissement)
     {
-        if ($arrondissement->getId() != null) {
-            $requete = "INSERT INTO arrondissement VALUES (:arrondissement_id, :city_name, :arrondissement_name)";
-            $parametres = array(
-                'arrondissement_id' => $arrondissement->getId(),
-                'city_name' => $arrondissement->getCity()->getName(),
-                'arrondissement_name' => $arrondissement->getName()
-            );
-        } else {
-            $requete = "INSERT INTO arrondissement (arrondissement_name, city_name) VALUE (:arrondissement_name, :city_name)";
-            $parametres = array(
-                'arrondissement_name' => $arrondissement->getName(),
-                'city_name' => $arrondissement->getCity()->getName()
-            );
+        if(!array_key_exists($arrondissement->getName(), DAO::$ARRONDISSEMENTS)) {
+            if ($arrondissement->getId() != null) {
+                $requete = "INSERT INTO arrondissement VALUES (:arrondissement_id, :city_name, :arrondissement_name)";
+                $parametres = array(
+                    'arrondissement_id' => $arrondissement->getId(),
+                    'city_name' => $arrondissement->getCity()->getName(),
+                    'arrondissement_name' => $arrondissement->getName()
+                );
+            } else {
+                $requete = "INSERT INTO arrondissement (arrondissement_name, city_name) VALUE (:arrondissement_name, :city_name)";
+                $parametres = array(
+                    'arrondissement_name' => $arrondissement->getName(),
+                    'city_name' => $arrondissement->getCity()->getName()
+                );
+            }
+
+
+            $this->executerInsert($requete, $parametres);
+            DAO::$ARRONDISSEMENTS[$arrondissement->getName()] = 1;
         }
-
-
-        $this->executerInsert($requete, $parametres);
     }
     
     public function getLastMeteoArrondissementSnapshot()

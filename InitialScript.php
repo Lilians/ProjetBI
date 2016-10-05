@@ -16,7 +16,6 @@ include_once 'API/JCDecauxUrlBuilder.php';
 include_once 'DAO/Service.php';
 include_once 'DAO/DAO.php';
 
-
 $a = new Api\ApiRequester();
 
 $s = new \DAO\Service();

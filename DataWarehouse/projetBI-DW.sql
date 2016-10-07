@@ -12,7 +12,6 @@ CREATE TABLE StationStreet (
 	station_street_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	district_city_id INT,
 	station_name VARCHAR(100),
-	address VARCHAR(150),
 	banking boolean,
 	bonus boolean,
 	nb_emplacements INT,
@@ -52,7 +51,7 @@ CREATE TABLE DayWeek (
 
 CREATE TABLE Hour (
 	hour_id VARCHAR(20) PRIMARY KEY,
-	day_week_id INT,
+	day_week_id VARCHAR(20),
 	hour INT,
 	half_hour INT,
 	FOREIGN KEY (day_week_id)
@@ -63,7 +62,7 @@ CREATE TABLE Snapshot (
 	snapshot_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	station_street_id INT,
 	contract_id INT,
-	minute_hour_id INT,
+	hour_id VARCHAR(20),
 	weather_id INT,
 	available_bike_stands INT,
 	available_bikes INT,

@@ -70,8 +70,8 @@ CREATE TABLE Snapshot (
 		REFERENCES StationStreet(station_street_id),
 	FOREIGN KEY (contract_id)
 		REFERENCES Contract(contract_id),
-	FOREIGN KEY (minute_hour_id)
-		REFERENCES MinuteHour(minute_hour_id),
+	FOREIGN KEY (hour_id)
+		REFERENCES Hour(hour_id),
 	FOREIGN KEY (weather_id)
 		REFERENCES Weather(weather_id)
 );

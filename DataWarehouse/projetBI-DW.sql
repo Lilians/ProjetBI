@@ -20,11 +20,6 @@ CREATE TABLE StationStreet (
 		REFERENCES DistrictCity(district_city_id)
 );
 
-CREATE TABLE Contract (
-	contract_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	commercial_name VARCHAR(50)
-);
-
 CREATE TABLE Weather (
 	weather_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	precip_intensity FLOAT(3,2),
@@ -61,7 +56,6 @@ CREATE TABLE Hour (
 CREATE TABLE Snapshot (
 	snapshot_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	station_street_id INT,
-	contract_id INT,
 	hour_id VARCHAR(20),
 	weather_id INT,
 	available_bike_stands INT,

@@ -59,10 +59,11 @@ class ApiRequester
      */
     public function requeteComplementStations($stations)
     {
-        $str = file_get_contents('./Db/pvo_patrimoine_voirie.pvostationvelov_all.json-json.txt');
-        $lines = explode(PHP_EOL, $str);
+//        $str = file_get_contents('./Db/pvo_patrimoine_voirie.pvostationvelov_all.json-json.txt', FILE_USE_INCLUDE_PATH);
+        $myfile = fopen("./Db/DATA.json", "r") or die("Unable to open file!");
+        $jsonData =  fread($myfile,filesize("./Db/DATA.json"));
+        fclose($myfile);
 
-        $jsonData = file_get_contents($lines[1]);
         $Data = json_decode($jsonData, true)['values'];
 
         foreach ($stations as $key => $station) {
@@ -71,7 +72,11 @@ class ApiRequester
 
                     $tab = explode(' ', $item['commune']);
                     $station['city'] = $tab[0];
-                    $station['arrondissement'] = sizeof($tab) > 1 ? $tab[1].' '.$tab[2] : '-';
+                    if(sizeof($tab) == 1){
+                        $station['arrondissement'] = $tab[0];
+                    } else {
+                        $station['arrondissement']=  $tab[1].' '.$tab[2];
+                    }
                     $stations[$key]=  $station;
                 }
             }
@@ -137,8 +142,8 @@ class ApiRequester
     {
         $this->Http_Headers = $Http_Headers;
     }
-	
-	/**
+
+    /**
      * Récupère les données météorologiques selon la latitude et la longitude passée en paramètre
      * @param $lat, $lng
      * @return mixed

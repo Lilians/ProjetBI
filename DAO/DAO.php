@@ -13,6 +13,7 @@ include_once './Model/City.php';
 use Model\Arrondissement;
 use Model\City;
 use Model\Contrat;
+use Model\Event;
 use Model\Station;
 use Model\StationSnapshot;
 
@@ -27,6 +28,7 @@ class DAO
     private $BDHandler;
     public static $CITIES = [];
     public static $ARRONDISSEMENTS = [];
+
     /**
      * DAO constructor.
      */
@@ -36,6 +38,22 @@ class DAO
             $this->BDHandler = new \PDO('mysql:host=localhost;dbname=projetbi;charset=utf8', 'root', '');
         } catch (\Exception $e) {
             die('Erreur : ' . $e->getMessage());
+        }
+
+
+        $arrondissements = $this->executerSelectFetchAll("SELECT * FROM arrondissement", []);
+        foreach ($arrondissements as $arr) {
+            $name = $arr['arrondissement_name'];
+            if (!array_key_exists($name, DAO::$ARRONDISSEMENTS))
+                DAO::$ARRONDISSEMENTS[$arr['arrondissement_name']] = 1;
+        }
+
+        $cities = $this->executerSelectFetchAll("SELECT * FROM city", []);
+        foreach ($cities as $city) {
+            $name = $city['city_name'];
+            if (!array_key_exists($name, DAO::$CITIES)) {
+                DAO::$CITIES[$name] = 1;
+            }
         }
     }
 
@@ -47,8 +65,8 @@ class DAO
 
         return $requete->fetch();
     }
-    
-     public function executerSelectFetchAll($requete, $parametres)
+
+    public function executerSelectFetchAll($requete, $parametres)
     {
         $requete = $this->BDHandler->prepare($requete);
         $requete->execute($parametres);
@@ -69,7 +87,7 @@ class DAO
             var_dump("/////////////////////////////////////////");
         }
     }
-    
+
     public function insertAllContrats($array)
     {
         foreach ($array as $contrat) {
@@ -79,7 +97,7 @@ class DAO
 
     public function insertContrat(Contrat $contrat)
     {
-        $requete = "INSERT INTO CONTRAT VALUES (:name, :commercial_name, :country_code)";
+        $requete = "INSERT INTO CONTRAT VALUES (:name, :commercial_name, :country_code);";
         $parametres = [
             'name' => $contrat->getName(),
             'commercial_name' => $contrat->getCommercialName(),
@@ -89,7 +107,7 @@ class DAO
         foreach ($contrat->getCities() as $city) {
             $this->insertCity($city, $contrat);
         }
-        if($contrat->getName() == "Lyon") {
+        if ($contrat->getName() == "Lyon") {
             $Venissieux = new City("VENISSIEUX");
             $Venissieux->setContractName("Lyon");
             $this->insertCity($Venissieux, $contrat);
@@ -106,7 +124,14 @@ class DAO
         ];
         $this->executerInsert($requete, $parametres);
     }
-    
+
+    public function updateAllStation($array)
+    {
+        foreach ($array as $station) {
+            $this->updateStation($station);
+        }
+    }
+
     public function insertAllStations($array)
     {
         foreach ($array as $station) {
@@ -122,7 +147,7 @@ class DAO
                 $this->insertCity($station->getCity(), $station->getContractName());
             }
         }
-        
+
         if (!$station->getArrondissement()->getId()) {
             $this->insertArrondissement($station->getArrondissement());
         }
@@ -147,11 +172,24 @@ class DAO
         );
         $this->executerInsert($requete, $parametres);
 
-        foreach ($station->getSnapshots() as $snapshot){
+        foreach ($station->getSnapshots() as $snapshot) {
             $this->insertStationSnapshot($snapshot);
         }
     }
-    
+
+    public function getStations()
+    {
+        $requete = "SELECT * FROM station ";
+        $result = $this->executerSelectFetchAll($requete, null);
+        $newStations = [];
+        foreach ($result as $station) {
+
+            $newStation = Station::createStationFromArray($station);
+            $newStations[] = $newStation;
+        }
+        return $newStations;
+    }
+
     public function setStationArrondissement(Station $station, Arrondissement $arrondissement)
     {
         $requete = "UPDATE STATION SET arrondissement_id = :arrondissement_id WHERE station_number= :station_number";
@@ -171,7 +209,7 @@ class DAO
         );
         $this->executerInsert($requete, $parametres);
     }
-    
+
     public function updateStation(Station $station)
     {
         $requete = "UPDATE STATION SET contrat_name= :contrat_name, station_name =:station_name, address =:address, banking =:banking, bonus=:bonus, bike_stands=:bike_stands, latitude=:latitude, longitude=:longitude WHERE station_number=:station_number";
@@ -188,8 +226,10 @@ class DAO
         );
         $this->executerInsert($requete, $parametres);
     }
-    
-    public function insertStationSnapshot(StationSnapshot $snapshot){
+
+
+    public function insertStationSnapshot(StationSnapshot $snapshot)
+    {
         $requete = "INSERT INTO station_snapshot(station_number, available_bike_stands, available_bikes, last_update) VALUES (:station_number, :available_bike_stands, :available_bikes, :last_update)";
         $parametres = [
             'station_number' => $snapshot->getStationNumber(),
@@ -199,13 +239,13 @@ class DAO
         ];
         $this->executerInsert($requete, $parametres);
     }
-    
+
     public function requeteCity(City $city)
     {
         $requete = "SELECT * FROM city WHERE city_name = :city_name";
         return $this->executerSelectFetch($requete, array('city_name' => $city->getName()));
     }
-    
+
     public function getCity($name)
     {
         $requete = "SELECT * FROM ciry WHERE city_name= :name";
@@ -216,7 +256,7 @@ class DAO
 
     public function insertCity(City $city, $c)
     {
-        if(!array_key_exists($city->getName(), DAO::$CITIES)) {
+        if (!array_key_exists($city->getName(), DAO::$CITIES)) {
             $requete = "INSERT INTO city (city_name, contrat_name) VALUE (:city_name, :contrat_name)";
             $parametres = array(
                 'city_name' => $city->getName(),
@@ -228,37 +268,36 @@ class DAO
         }
 
     }
-    
-     public function getArrondissement($id)
+
+    public function getArrondissement($id)
     {
         $requete = "SELECT * FROM arrondissement WHERE arrondissement_id= :id";
         $result = $this->executerSelectFetch($requete, array('id' => $id));
         $arr = new Arrondissement($result['arrondissement_name'], $this->getCity($result['city_name']));
         $arr->setId($result['arrondissement_id']);
-        $arr->setLatitude((float) $result['latitude']);
-        $arr->setLongitude((float) $result['longitude']);
+        $arr->setLatitude((float)$result['latitude']);
+        $arr->setLongitude((float)$result['longitude']);
         return $arr;
     }
-    
+
     public function getArrondissements()
     {
         $requete = "SELECT * FROM arrondissement ";
         $result = $this->executerSelectFetchAll($requete, null);
         $arrs = [];
-        foreach($result as $ar)
-        {
+        foreach ($result as $ar) {
             $arr = new \Model\Arrondissement($ar['arrondissement_name'], $this->getCity($ar['city_name']));
             $arr->setId($ar['arrondissement_id']);
-            $arr->setLatitude((float) $ar['latitude']);
-            $arr->setLongitude((float) $ar['longitude']);
+            $arr->setLatitude((float)$ar['latitude']);
+            $arr->setLongitude((float)$ar['longitude']);
             $arrs[] = $arr;
-        } 
+        }
         return $arrs;
     }
 
     public function insertArrondissement(Arrondissement $arrondissement)
     {
-        if(!array_key_exists($arrondissement->getName(), DAO::$ARRONDISSEMENTS)) {
+        if (!array_key_exists($arrondissement->getName(), DAO::$ARRONDISSEMENTS)) {
             if ($arrondissement->getId() != null) {
                 $requete = "INSERT INTO arrondissement VALUES (:arrondissement_id, :city_name, :arrondissement_name)";
                 $parametres = array(
@@ -276,44 +315,53 @@ class DAO
 
 
             $this->executerInsert($requete, $parametres);
+
+            $req = "SELECT arrondissement_id FROM arrondissement WHERE arrondissement_name=:arrondissement_name AND city_name=:city_name";
+            $parametres = array(
+                'arrondissement_name' => $arrondissement->getName(),
+                'city_name' => $arrondissement->getCity()->getName()
+            );
+
+
             DAO::$ARRONDISSEMENTS[$arrondissement->getName()] = 1;
+
+            return $this->executerSelectFetch($req, $parametres);
         }
     }
-    
+
     public function getLastMeteoArrondissementSnapshot()
     {
         $requete = "SELECT * FROM meteo_arrondissement_snapshot GROUP BY arrondissement_id ORDER BY last_update DESC";
         $array = $this->executerSelectFetchAll($requete, null);
-        if($array)
-        {
+        if ($array) {
             $masReturn = [];
-            foreach($array as $masa)
-            {
-               $mas = new \Model\MeteoArrondissementSnapshot();
-               $mas->setId($masa['meteo_arrondissement_snapshot_id']);
-               $mas->setArrondissement($this->getArrondissement($masa['arrondissement_id']));
-               $mas->setLastUpdate($masa['last_update']);
-               $mas->setLastTime($masa['last_time']);
-               $mas->setSummary($masa['summary']);
-               $mas->setTemperature($masa['temperature']);
-               $mas->setApparentEmperature($masa['summary']);
-               $mas->setCloudCover($masa['cloud_cover']);
-               $mas->setHumidity($masa['humidity']);
-               $mas->setPrecipIntensity($masa['precip_intensity']);
-               $mas->setPrecipProbability($masa['precip_probability']);
-               $mas->setWindBearing($masa['wind_bearing']);
-               $mas->setWindSpeed($masa['wind_speed']);
-               $masReturn[] = $mas;
+            foreach ($array as $masa) {
+                $mas = new \Model\MeteoArrondissementSnapshot();
+                $mas->setId($masa['meteo_arrondissement_snapshot_id']);
+                $mas->setArrondissement($this->getArrondissement($masa['arrondissement_id']));
+                $mas->setLastUpdate($masa['last_update']);
+                $mas->setLastTime($masa['last_time']);
+                $mas->setSummary($masa['summary']);
+                $mas->setTemperature($masa['temperature']);
+                $mas->setApparentEmperature($masa['summary']);
+                $mas->setCloudCover($masa['cloud_cover']);
+                $mas->setHumidity($masa['humidity']);
+                $mas->setPrecipIntensity($masa['precip_intensity']);
+                $mas->setPrecipProbability($masa['precip_probability']);
+                $mas->setWindBearing($masa['wind_bearing']);
+                $mas->setWindSpeed($masa['wind_speed']);
+                $masReturn[] = $mas;
             }
             return $masReturn;
         }
         return null;
-        
+
     }
-    
-    public function insertMeteoArrondissementSnapshot(\Model\MeteoArrondissementSnapshot $snapshot){
+
+    public function insertMeteoArrondissementSnapshot(\Model\MeteoArrondissementSnapshot $snapshot)
+    {
         $requete = "INSERT INTO meteo_arrondissement_snapshot (arrondissement_id, last_time, last_update, summary, temperature, apparent_temperature, humidity, cloud_cover, wind_bearing, wind_speed, precip_intensity, precip_probability) "
-                . "VALUES (:arrondissement_id, :last_time, :last_update, :summary, :temperature, :apparent_temperature, :humidity, :cloud_cover, :wind_bearing, :wind_speed, :precip_intensity, :precip_probability)";
+            . "VALUES (:arrondissement_id, :last_time, :last_update, :summary, :temperature, :apparent_temperature, :humidity, :cloud_cover, :wind_bearing, :wind_speed, :precip_intensity, :precip_probability)";
         $parametres = [
             'arrondissement_id' => $snapshot->getArrondissement()->getId(),
             'last_time' => $snapshot->getLastTime(),
@@ -329,5 +377,48 @@ class DAO
             'precip_probability' => $snapshot->getPrecipProbability()
         ];
         $this->executerInsert($requete, $parametres);
+    }
+
+
+    public function insertVoisinage($station1, $station2, $distance)
+    {
+        $requete = "INSERT INTO Neighborhood(station_number1, station_number2, distance) VALUES (:station_number1, :station_number2, :distance)";
+        $parametres = [
+            'station_number1' => $station1->getStationNumber(),
+            'station_number2' => $station2->getStationNumber(),
+            'distance' => $distance
+
+        ];
+        $this->executerInsert($requete, $parametres);
+    }
+
+    public function insertEvent(Event $event)
+    {
+        $mysql = "INSERT INTO day(day_date, day_category, day_name) VALUES (:day_date, :day_category, :day_name)";
+        if ($event->getDateStart()->format("Ymd") === $event->getDateEnd()->format("Ymd")) {
+            $parametres = [
+                'day_date' => $event->getDateStart()->format('Y-m-d'),
+                'day_category' => $event->getCategory(),
+                'day_name' => $event->getName()
+            ];
+            $this->executerInsert($mysql, $parametres);
+        } else {
+            $currentDate = $event->getDateStart();
+            while ($currentDate->format('Ymd') !== $event->getDateEnd()->format('Ymd')){
+                $parametres = [
+                    'day_date' => $currentDate->format('Y-m-d'),
+                    'day_category' => $event->getCategory(),
+                    'day_name' => $event->getName()
+                ];
+                $this->executerInsert($mysql, $parametres);
+                $currentDate = $currentDate->add(new \DateInterval('P1D'));
+            }
+        }
+    }
+
+    public function insertEvents($array){
+        foreach ($array as $event){
+            $this->insertEvent($event);
+        }
     }
 }

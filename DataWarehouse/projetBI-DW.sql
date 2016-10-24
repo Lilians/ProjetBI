@@ -62,8 +62,6 @@ CREATE TABLE Snapshot (
 	available_bikes INT,
 	FOREIGN KEY (station_street_id)
 		REFERENCES StationStreet(station_street_id),
-	FOREIGN KEY (contract_id)
-		REFERENCES Contract(contract_id),
 	FOREIGN KEY (hour_id)
 		REFERENCES Hour(hour_id),
 	FOREIGN KEY (weather_id)

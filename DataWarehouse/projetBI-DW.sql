@@ -12,10 +12,10 @@ CREATE TABLE StationStreet (
 	station_street_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	district_city_id INT,
 	station_name VARCHAR(100),
+	address VARCHAR(150),
 	banking boolean,
 	bonus boolean,
 	nb_emplacements INT,
-	street VARCHAR(150),
 	FOREIGN KEY (district_city_id)
 		REFERENCES DistrictCity(district_city_id)
 );

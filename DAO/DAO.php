@@ -379,19 +379,6 @@ class DAO
         $this->executerInsert($requete, $parametres);
     }
 
-
-    public function insertVoisinage($station1, $station2, $distance)
-    {
-        $requete = "INSERT INTO Neighborhood(station_number1, station_number2, distance) VALUES (:station_number1, :station_number2, :distance)";
-        $parametres = [
-            'station_number1' => $station1->getStationNumber(),
-            'station_number2' => $station2->getStationNumber(),
-            'distance' => $distance
-
-        ];
-        $this->executerInsert($requete, $parametres);
-    }
-
     public function insertEvent(Event $event)
     {
         $mysql = "INSERT INTO day(day_date, day_category, day_name) VALUES (:day_date, :day_category, :day_name)";
@@ -420,5 +407,18 @@ class DAO
         foreach ($array as $event){
             $this->insertEvent($event);
         }
+    }
+
+
+
+    public function insertVoisinage($station1, $station2, $distance){
+        $requete = "INSERT INTO neighborhood(station_number1, station_number2, distance) VALUES (:station_number1, :station_number2, :distance)";
+        $parametres = [
+            'station_number1' => $station1->getNumber(),
+            'station_number2' => $station2->getNumber(),
+            'distance' => $distance
+
+        ];
+        $this->executerInsert($requete, $parametres);
     }
 }

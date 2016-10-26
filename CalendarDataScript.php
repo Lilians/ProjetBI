@@ -19,7 +19,9 @@ $DAO = new \DAO\DAO();
 
 function parseDate($date)
 {
-    return date_create_from_format("Ymd", $date);
+    $dateTime = date_create_from_format("Ymd", $date);
+    $dateTime->setTime(0, 0, 0);
+    return $dateTime;
 }
 
 
@@ -47,11 +49,12 @@ function getCalendarData($url, $key_to_name)
 
     foreach ($ics->cal['VEVENT'] as $event) {
         if (array_key_exists('RRULE', $event) && $event['RRULE'] == "FREQ=YEARLY") {
+            $event['DTSTART'] = YEAR_START . substr($event['DTSTART'], 4);
             for ($i = YEAR_START; $i <= YEAR_END; $i++) {
                 $nextDate = parseDate($event['DTSTART']);
                 $nextDate->add(new DateInterval("P1Y"));
                 $event['DTSTART'] = date_format($nextDate, "Ymd");
-
+                unset($event['DTEND']);//DTEND est setté au lendemain, ce qui entraine un bug, donc on le vire
                 $myEvent = treatRegularEvent($event, $key_to_name);
                 if ($myEvent != null)
                     $events[date_format($myEvent->getDateStart(), 'Y_m') . '-' . $myEvent->getName()] = $myEvent;

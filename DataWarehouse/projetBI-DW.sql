@@ -72,6 +72,8 @@ CREATE TABLE Neighborhood (
 	neighborhood_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	station_street_id_1 INT,
 	station_street_id_2 INT,
+	station_name_1 VARCHAR(100),
+	station_name_2 VARCHAR(100),
 	distance INT,
 	FOREIGN KEY (station_street_id_1)
 		REFERENCES StationStreet(station_street_id),

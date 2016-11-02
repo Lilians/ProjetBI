@@ -1,6 +1,8 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Renseigne les données de base du projet :
+ *          - Les différents contrats de JCDecaux concernant les vélos en libre service
+ *          - Les différentes stations de l'agglomération Lyonnaise ainsi que les données complémentaires qui leur sont associées.
  * User: Vlad
  * Date: 09/09/2016
  * Time: 12:54
@@ -31,10 +33,7 @@ $stations_array = $a->requeteComplementStations($a->requeteToutesStations('Lyon'
 
 $stations = $s->peuplerStations($stations_array);
 
-//$stations = $s->peuplerStation($a->requeteStation(2010, 'Lyon'));
 $arrondissements = [];
 
 
 $dao->insertAllStations($stations);
-//var_dump($stations);
-

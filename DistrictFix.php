@@ -1,6 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Script ayant pour objet de régler le problème des arrondissements : en effet, suite à une erreur, les villes de l'agglomération lyonnaise suivantes
+ * n'ont pas été correctement traitées : VAULX-EN-VELUN, CALUIRE-ET-CUIRE
  * User: Vlad
  * Date: 21/10/2016
  * Time: 16:31

@@ -69,17 +69,6 @@ CREATE TABLE meteo_arrondissement_snapshot (
     REFERENCES arrondissement (arrondissement_id)
 );
 
-CREATE TABLE Neighborhood (
-    neighborhood_id     INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    station_street_id_1 INT,
-    station_street_id_2 INT,
-    distance            INT,
-    FOREIGN KEY (station_street_id_1)
-    REFERENCES StationStreet (station_street_id),
-    FOREIGN KEY (station_street_id_2)
-    REFERENCES StationStreet (station_street_id)
-);
-
 
 CREATE TABLE Day (
     day_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -89,25 +78,25 @@ CREATE TABLE Day (
 );
 
 
-INSERT INTO `contrat` (`contrat_name`, `commercial_name`, `country_code`) VALUES
-    ('Lyon', 'Vélo''V', 'FR');
-
-INSERT INTO `city` (`city_name`, `contrat_name`) VALUES
-    ('CALUIRE-ET-CUIRE', 'Lyon'),
-    ('LYON', 'Lyon'),
-    ('VAULX-EN-VELIN', 'Lyon'),
-    ('VILLEURBANNE', 'Lyon');
-
-INSERT INTO `arrondissement` (`arrondissement_id`, `city_name`, `arrondissement_name`, `latitude`, `longitude`) VALUES
-    (1, 'LYON', '1 er', 45.771292, 04.828083),
-    (2, 'LYON', '2 ème', 45.747711, 04.824100),
-    (3, 'LYON', '3 ème', 45.758260, 04.855387),
-    (4, 'LYON', '4 ème', 45.780952, 04.824349),
-    (5, 'LYON', '5 ème', 45.758262, 04.799075),
-    (6, 'LYON', '6 ème', 45.775107, 04.850197),
-    (7, 'LYON', '7 ème', 45.730425, 04.839938),
-    (8, 'LYON', '8 ème', 45.731538, 04.869616),
-    (9, 'LYON', '9 ème', 45.769942, 04.803718),
-    (10, 'VAULX-EN-VELIN', '-', 45.782029, 04.922661),
-    (11, 'VILLEURBANNE', '-', 45.771944, 04.890171),
-    (12, 'CALUIRE-ET-CUIRE', '-', 45.796810, 04.842426);
+# INSERT INTO `contrat` (`contrat_name`, `commercial_name`, `country_code`) VALUES
+#     ('Lyon', 'Vélo''V', 'FR');
+#
+# INSERT INTO `city` (`city_name`, `contrat_name`) VALUES
+#     ('CALUIRE-ET-CUIRE', 'Lyon'),
+#     ('LYON', 'Lyon'),
+#     ('VAULX-EN-VELIN', 'Lyon'),
+#     ('VILLEURBANNE', 'Lyon');
+#
+# INSERT INTO `arrondissement` (`arrondissement_id`, `city_name`, `arrondissement_name`, `latitude`, `longitude`) VALUES
+#     (1, 'LYON', '1 er', 45.771292, 04.828083),
+#     (2, 'LYON', '2 ème', 45.747711, 04.824100),
+#     (3, 'LYON', '3 ème', 45.758260, 04.855387),
+#     (4, 'LYON', '4 ème', 45.780952, 04.824349),
+#     (5, 'LYON', '5 ème', 45.758262, 04.799075),
+#     (6, 'LYON', '6 ème', 45.775107, 04.850197),
+#     (7, 'LYON', '7 ème', 45.730425, 04.839938),
+#     (8, 'LYON', '8 ème', 45.731538, 04.869616),
+#     (9, 'LYON', '9 ème', 45.769942, 04.803718),
+#     (10, 'VAULX-EN-VELIN', '-', 45.782029, 04.922661),
+#     (11, 'VILLEURBANNE', '-', 45.771944, 04.890171),
+#     (12, 'CALUIRE-ET-CUIRE', '-', 45.796810, 04.842426);

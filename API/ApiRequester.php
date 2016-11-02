@@ -48,7 +48,6 @@ class ApiRequester
             $UrlBuilder->setParametresGet(['contract' => $contrat]);
         }
         $url = $UrlBuilder->buildUrl();
-//        var_dump($url);
         return json_decode($this->envoyerGet($url), true);
     }
 
@@ -59,8 +58,8 @@ class ApiRequester
      */
     public function requeteComplementStations($stations)
     {
-//        $str = file_get_contents('./Db/pvo_patrimoine_voirie.pvostationvelov_all.json-json.txt', FILE_USE_INCLUDE_PATH);
-        $myfile = fopen("./Db/DATA.json", "r") or die("Unable to open file!");
+//        $str = file_get_contents('./Db/pvo_patrimoine_voirie.pvostationvelov_all.json-json.txt', FILE_USE_INCLUDE_PATH);//Usage on standard computer
+        $myfile = fopen("./Db/DATA.json", "r") or die("Unable to open file!");//Usage on server that cannot send HTTPS requests
         $jsonData =  fread($myfile,filesize("./Db/DATA.json"));
         fclose($myfile);
 
@@ -99,7 +98,6 @@ class ApiRequester
             $UrlBuilder->setParametresGet(['contract' => $contract_name]);
         }
         $url = $UrlBuilder->buildUrl();
-//        var_dump($url);
         return json_decode($this->envoyerGet($url), true);
     }
 
@@ -152,7 +150,6 @@ class ApiRequester
     {
         $UrlBuilder = new MeteoUrlBuilder();
         $url = $UrlBuilder->buildUrl($lat, $lng);
-//        var_dump($url);
         return json_decode($this->envoyerGet($url), true);
     }
 

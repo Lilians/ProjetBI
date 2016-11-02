@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Renseigne l'état du réseau de vélos en libre service de la ville de Lyon
  * User: Vlad
  * Date: 16/09/2016
  * Time: 10:30
@@ -28,7 +28,17 @@
   foreach ($stations_array as $array){
       $dao->insertStationSnapshot(Model\StationSnapshot::createStationSnapshotFromArray($array));
   }
-  
+
+
+/**
+ * La section suivante est fonctionnelle, cependant, les données qu'elle a inséré n'ont pas été prises en compte car
+ * les données GPS des arrondissements étaient erronnées lors de notre étude.
+ *
+ * Voir MeteoSpider pour la récupération des données météo
+ */
+
+
+
   //ajout snapshot meteo arrondissement
   $meteoArrondissementSnapshots = $dao->getLastMeteoArrondissementSnapshot();
   if($meteoArrondissementSnapshots) //mise a jour 

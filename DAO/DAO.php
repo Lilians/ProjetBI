@@ -408,17 +408,4 @@ class DAO
             $this->insertEvent($event);
         }
     }
-
-
-
-    public function insertVoisinage($station1, $station2, $distance){
-        $requete = "INSERT INTO neighborhood(station_number1, station_number2, distance) VALUES (:station_number1, :station_number2, :distance)";
-        $parametres = [
-            'station_number1' => $station1->getNumber(),
-            'station_number2' => $station2->getNumber(),
-            'distance' => $distance
-
-        ];
-        $this->executerInsert($requete, $parametres);
-    }
 }

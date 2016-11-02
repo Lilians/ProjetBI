@@ -1,6 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
+ * Renseigne les données de voisinage dans l'entrepôt de données.
  * User: Vlad
  * Date: 09/09/2016
  * Time: 12:54

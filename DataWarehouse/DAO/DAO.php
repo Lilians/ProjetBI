@@ -8,7 +8,7 @@
 namespace DW;
 
 /**
- * Effectue la liaison avec la base de donneés
+ * Effectue la liaison avec l'entrepôt de données
  * Class DAO
  * @package DAO
  */
@@ -62,7 +62,8 @@ class DAO
     }
 
     public function insertVoisinage($station1, $station2, $distance){
-        $requete = "INSERT INTO Neighborhood(station_street_id_1, station_street_id_2, distance) VALUES (:station_number1, :station_number2, :distance)";
+        $requete = "INSERT INTO Neighborhood(station_street_id_1, station_street_id_2, distance, station_name_1, station_name_2) 
+                          VALUES (:station_number1, :station_number2, :distance, :station1, :station2)";
 
         $sql = "SELECT station_street_id FROM stationstreet WHERE station_name=:name";
 
@@ -72,6 +73,8 @@ class DAO
         $parametres = [
             'station_number1' => $station_street_id_1,
             'station_number2' => $station_street_id_2,
+            'station1' => $station1->getName(),
+            'station2' => $station2->getName(),
             'distance' => $distance
         ];
         $this->executerInsert($requete, $parametres);

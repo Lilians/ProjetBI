@@ -20,19 +20,6 @@ CREATE TABLE StationStreet (
 		REFERENCES DistrictCity(district_city_id)
 );
 
-CREATE TABLE Weather (
-	weather_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	precip_intensity FLOAT(3,2),
-	precip_probability FLOAT(3,2),
-	temperature FLOAT(3,1),
-	apparent_temperture FLOAT(3,1),
-	humidity FLOAT(3,2),
-	wind_speed FLOAT(5,2),
-	wind_bearing INT,
-	cloud_cover FLOAT(3,2),
-	weather_label VARCHAR(50)
-);
-
 CREATE TABLE DayWeek (
 	day_week_id VARCHAR(20) PRIMARY KEY,
 	day INT,
@@ -57,15 +44,12 @@ CREATE TABLE Snapshot (
 	snapshot_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	station_street_id INT,
 	hour_id VARCHAR(20),
-	weather_id INT,
 	available_bike_stands INT,
 	available_bikes INT,
 	FOREIGN KEY (station_street_id)
 		REFERENCES StationStreet(station_street_id),
 	FOREIGN KEY (hour_id)
-		REFERENCES Hour(hour_id),
-	FOREIGN KEY (weather_id)
-		REFERENCES Weather(weather_id)
+		REFERENCES Hour(hour_id)
 );
 
 CREATE TABLE Neighborhood (

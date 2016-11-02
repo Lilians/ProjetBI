@@ -37,7 +37,7 @@
  * Voir MeteoSpider pour la récupération des données météo
  */
 
-
+/*
 
   //ajout snapshot meteo arrondissement
   $meteoArrondissementSnapshots = $dao->getLastMeteoArrondissementSnapshot();

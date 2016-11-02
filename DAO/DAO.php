@@ -248,7 +248,7 @@ class DAO
 
     public function getCity($name)
     {
-        $requete = "SELECT * FROM ciry WHERE city_name= :name";
+        $requete = "SELECT * FROM city WHERE city_name= :name";
         $result = $this->executerSelectFetch($requete, array('name' => $name));
         $city = new City($result['city_name'], $result['contract_name']);
         return $city;
@@ -299,7 +299,7 @@ class DAO
     {
         if (!array_key_exists($arrondissement->getName(), DAO::$ARRONDISSEMENTS)) {
             if ($arrondissement->getId() != null) {
-                $requete = "INSERT INTO arrondissement VALUES (:arrondissement_id, :city_name, :arrondissement_name)";
+                $requete = "INSERT INTO arrondissement VALUES (:arrondissement_id, :city_name, :arrondissement_name, 0, 0)";
                 $parametres = array(
                     'arrondissement_id' => $arrondissement->getId(),
                     'city_name' => $arrondissement->getCity()->getName(),
